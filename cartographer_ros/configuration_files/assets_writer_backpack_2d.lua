@@ -98,7 +98,7 @@ options = {
     -- laser.
     {
       action = "color_points",
-      frame_id = "horizontal_laser_link",
+      frame_id = "laser",
       color = { 255., 0., 0. },
     },
     {

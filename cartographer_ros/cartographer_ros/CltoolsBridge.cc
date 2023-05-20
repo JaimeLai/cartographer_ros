@@ -70,15 +70,15 @@ void CltoolsBridge::lidarCb(TLmwLidar &&msg)
 
 	// 设置消息头
 	out.header.stamp = ros::Time::now();
-	out.header.frame_id = "scan";
-	
+	out.header.frame_id = "laser";
 
 	// 设置激光扫描的参数
-	out.angle_min = 0.01;
-	out.angle_max = 6.28;
-	out.angle_increment = 0.01;
-	out.time_increment = 0.0005;
-	out.scan_time = 0.1;
+	out.angle_min = -3.14;
+	out.angle_max = 3.14;
+	out.angle_increment = 6.28 / 360;
+	out.time_increment = 1 / 10 / 360;
+	out.range_min = 0.01;
+	out.range_max = 6.0;
 
 	// 设置激光束的数量和回波数量
 	out.ranges.resize(360);
@@ -106,7 +106,7 @@ void CltoolsBridge::chassisCb(TLmwChassis &&msg)
 
 	odom_trans.header.stamp = time;
 	odom_trans.header.frame_id = "odom";
-	odom_trans.child_frame_id = "base_link";
+	odom_trans.child_frame_id = "laser";
 
 	odom_trans.transform.translation.x = 0;
 	odom_trans.transform.translation.y = 0;
@@ -121,11 +121,11 @@ void CltoolsBridge::chassisCb(TLmwChassis &&msg)
 	// 设置消息头
 	out.header.stamp = time;
 	out.header.frame_id = "odom";
-	out.child_frame_id = "base_link";
+	out.child_frame_id = "laser";
 
-	out.pose.pose.position.x = msg.odm.raw_pose.x;
-	out.pose.pose.position.y = msg.odm.raw_pose.y;
-	// out.pose.pose.position.z = msg.odm.fuse_pose.z;
+	out.pose.pose.position.x = msg.odm.fuse_pose.x;
+	out.pose.pose.position.y = msg.odm.fuse_pose.y;
+	out.pose.pose.position.z = 0;
 	out.pose.pose.orientation = tf::createQuaternionMsgFromYaw(msg.imu[TLmwChassis::YAW]);
 
 	out.twist.twist.angular.z = msg.odm.ang_velocity;
