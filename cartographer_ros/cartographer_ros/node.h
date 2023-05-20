@@ -50,6 +50,7 @@
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/PointCloud2.h"
 #include "tf2_ros/transform_broadcaster.h"
+#include "cartographer_ros/CltoolsBridge.h"
 
 namespace cartographer_ros {
 
@@ -229,6 +230,8 @@ class Node {
   // simulation time is standing still. This prevents overflowing the transform
   // listener buffer by publishing the same transforms over and over again.
   ::ros::Timer publish_local_trajectory_data_timer_;
+
+  CltoolsBridge m_ltools_bridge;
 };
 
 }  // namespace cartographer_ros

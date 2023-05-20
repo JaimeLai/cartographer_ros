@@ -16,6 +16,8 @@ cmake_minimum_required(VERSION 2.8.12)  # Ships with Ubuntu 14.04 (Trusty)
 
 project(cartographer_ros)
 
+include(cmake/ltoolsBridge.cmake)
+
 set(PACKAGE_DEPENDENCIES
   cartographer_ros_msgs
   geometry_msgs
@@ -101,10 +103,15 @@ if (NOT ${BUILD_GRPC})
   list(REMOVE_ITEM ALL_TESTS ${ALL_GRPC_FILES})
   list(REMOVE_ITEM ALL_EXECUTABLES ${ALL_GRPC_FILES})
 endif()
-add_library(${PROJECT_NAME} STATIC ${ALL_SRCS})
+add_library(${PROJECT_NAME} STATIC ${ALL_SRCS} ${proto_file})
 add_subdirectory("cartographer_ros")
 
-target_link_libraries(${PROJECT_NAME} PUBLIC cartographer)
+include_directories($ENV{LMINI_ROOT}/libs/include)
+include_directories($ENV{LMINI_ROOT}/libs_3rd/include)
+
+set(ltool_libs $ENV{LMINI_ROOT}/libs/x86/liblmw.so $ENV{LMINI_ROOT}/libs/x86/libltools.so $ENV{LMINI_ROOT}/libs_3rd/x86/libjsoncpp.so)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC cartographer ${ltool_libs})
 
 # Lua
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LUA_INCLUDE_DIR})
